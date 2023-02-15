@@ -6,13 +6,19 @@ import ErrorModal from '../UI/ErrorModal';
 import classes from './AddUser.module.css';
 
 const AddUser = (props) => {
-  const [enteredUsername, setEnteredUsername] = useState('');
-  const [enteredAge, setEnteredAge] = useState('');
+
+  const userNameref = React.useRef('')
+  const userAgeref = React.useRef('')
+  const userCollegeref = React.useRef('')
+  
   const [error, setError] = useState();
 
   const addUserHandler = (event) => {
     event.preventDefault();
-    if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
+    const enteredUsername = userNameref.current.value
+    const enteredAge = userAgeref.current.value 
+    const enteredCollegeName = userCollegeref.current.value
+    if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0 || enteredCollegeName.trim().length === 0) {
       setError({
         title: 'Invalid input',
         message: 'Please enter a valid name and age (non-empty values).',
@@ -26,18 +32,14 @@ const AddUser = (props) => {
       });
       return;
     }
-    props.onAddUser(enteredUsername, enteredAge);
-    setEnteredUsername('');
-    setEnteredAge('');
+    props.onAddUser(enteredUsername, enteredAge, enteredCollegeName);
+    userNameref.current.value = ''
+    userAgeref.current.value = ''
+    userCollegeref.current.value = ''
+    
   };
 
-  const usernameChangeHandler = (event) => {
-    setEnteredUsername(event.target.value);
-  };
-
-  const ageChangeHandler = (event) => {
-    setEnteredAge(event.target.value);
-  };
+  
 
   const errorHandler = () => {
     setError(null);
@@ -58,15 +60,19 @@ const AddUser = (props) => {
           <input
             id="username"
             type="text"
-            value={enteredUsername}
-            onChange={usernameChangeHandler}
+            ref={userNameref}
           />
           <label htmlFor="age">Age (Years)</label>
           <input
             id="age"
             type="number"
-            value={enteredAge}
-            onChange={ageChangeHandler}
+            ref = {userAgeref}
+          />
+          <label htmlFor="collegename">College Name</label>
+          <input
+            id="collegename"
+            type="text"
+            ref = {userCollegeref}
           />
           <Button type="submit">Add User</Button>
         </form>
